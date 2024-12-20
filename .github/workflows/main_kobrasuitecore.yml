@@ -3,7 +3,8 @@ name: Build and deploy Django app to Azure App Service
 on:
   push:
     branches: 
-      - master
+      - main
+  workflow_dispatch:
 
 env:
   WEBAPP_NAME: 'kobrasuitecore'  # Replace with the name of your Azure web app
@@ -37,7 +38,7 @@ jobs:
         python manage.py collectstatic
     
     - name: Upload artifact for deployment jobs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: python-app
         path: |
