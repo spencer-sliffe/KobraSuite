@@ -48,7 +48,9 @@ jobs:
     - name: Collect static
       run: |
         cd kobrasuitecore
-        python manage.py collectstatic
+        source venv/bin/activate
+        python manage.py collectstatic --noinput
+
     
     - name: Upload artifact for deployment jobs
       uses: actions/upload-artifact@v3
