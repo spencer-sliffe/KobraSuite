@@ -59,7 +59,7 @@ jobs:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip -o release.zip -d deployment-folder
 
       
       - name: 'Deploy to Azure Web App'
@@ -69,3 +69,4 @@ jobs:
           app-name: 'kobrasuitecore'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E09E67C229BE4809AEE38DC564643C7C }}
+          package: './deployment-folder'
