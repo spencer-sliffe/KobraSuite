@@ -30,12 +30,28 @@ jobs:
     - name: Install dependencies
       run: |
         cd kobrasuitecore
+        source venv/bin/activate
         pip install -r requirements.txt
+
+    - name: Set environment variables for Django
+        # Export environment variables directly OR write them to a .env file
+      run: |
+        cd kobrasuitecore
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+        echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
+        echo "CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}" >> .env
+        echo "DBHOST=${{ secrets.DBHOST }}" >> .env
+        echo "DBNAME=${{ secrets.DBNAME }}" >> .env
+        echo "DBUSER=${{ secrets.DBUSER }}" >> .env
+        echo "DBPASS=${{ secrets.DBPASS }}" >> .env
+        echo "DEBUG=${{ secrets.DEBUG }}" >> .env
 
     - name: Collect static
       run: |
         cd kobrasuitecore
-        python manage.py collectstatic
+        source venv/bin/activate
+        python manage.py collectstatic --noinput
+
     
     - name: Upload artifact for deployment jobs
       uses: actions/upload-artifact@v3
