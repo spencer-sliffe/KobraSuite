@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/37d156af-504b-47b6-97d0-367cfb28f3b2/resourceGroups/kobrasuite-east-us/providers/Microsoft.Web/sites/kobrasuitecore",
+    "appService.deploySubpath": "kobrasuitecore"
+}
