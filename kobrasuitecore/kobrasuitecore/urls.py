@@ -15,9 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.db import router
+from django.urls import path, include
 
-from kobrasuitecore import api
+from kobrasuitecore.api.router import customer_router, school_router, work_router, investing_router, homelife_router, \
+    finances_router, notifications_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +27,8 @@ urlpatterns = [
     path('api/', include(customer_router.urls)),
     path('api/', include(school_router.urls)),
     path('api/', include(work_router.urls)),
-    path('api/', include(stocks_router.urls)),
-    path('api/', include(home_router.urls)),
-    path('api/', include(finance_router.urls)),
+    path('api/', include(investing_router.urls)),
+    path('api/', include(homelife_router.urls)),
+    path('api/', include(finances_router.urls)),
+    path('api/', include(notifications_router.urls)),
 ]

@@ -110,3 +110,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTHENTICATION_BACKENDS = [
+    'customer.backends.RolePermissionBackend',       
+    'django.contrib.auth.backends.ModelBackend',     
+]
