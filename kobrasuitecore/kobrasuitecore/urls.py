@@ -21,5 +21,11 @@ from kobrasuitecore import api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', api.site.urls),
+    path('api/', include(router.urls)),
+    path('api/', include(customer_router.urls)),
+    path('api/', include(school_router.urls)),
+    path('api/', include(work_router.urls)),
+    path('api/', include(stocks_router.urls)),
+    path('api/', include(home_router.urls)),
+    path('api/', include(finance_router.urls)),
 ]

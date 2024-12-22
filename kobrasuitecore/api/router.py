@@ -26,4 +26,4 @@ school_router = routers.NestedDefaultRouter(router, r"school", lookup="school")
 investing_router = routers.NestedDefaultRouter(router, r"investing", lookup="investing")
 
 # Notifications
-notifications_router = routers.NestedDefaultRouter(router, r"notifications", lookup="investing")
+notifications_router = routers.NestedDefaultRouter(router, r"notifications", lookup="notifications")
