@@ -7,9 +7,6 @@ from .types import MFAType
 
 
 class User(AbstractUser):
-    """
-    Custom user model extending Django's AbstractUser.
-    """
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',
         message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
@@ -23,23 +20,22 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     is_phone_verified = models.BooleanField(default=False)
 
-    # Example utility method to check if a user has a given role
     def has_role(self, role_name: str) -> bool:
         return self.roles.filter(name=role_name).exists()
+
 
 class Role(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(null=True, blank=True)
-    permissions = models.ManyToManyField(Permission, blank=True)
+    # IMPORTANT: Add related_name='roles' so we can do .filter(roles__users=...)
+    permissions = models.ManyToManyField(Permission, blank=True, related_name='roles')
     users = models.ManyToManyField('User', related_name='roles', blank=True)
 
     def __str__(self):
         return self.name
 
+
 class MFAConfig(models.Model):
-    """
-    Stores multi-factor authentication details for a user.
-    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     mfa_enabled = models.BooleanField(default=False)
     mfa_type = models.CharField(max_length=50, choices=MFAType.choices, null=True, blank=True)
@@ -50,9 +46,6 @@ class MFAConfig(models.Model):
 
 
 class UserProfile(models.Model):
-    """
-    Extended profile information for a user.
-    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_of_birth = models.DateField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
@@ -64,9 +57,6 @@ class UserProfile(models.Model):
 
 
 class SecureDocument(models.Model):
-    """
-    Stores metadata for user documents (e.g., passports, birth certificates).
-    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='documents')
     title = models.CharField(max_length=100)
     file = models.FileField(upload_to='secure_documents/')

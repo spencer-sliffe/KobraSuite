@@ -1,67 +1,127 @@
 # customer/views.py
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.db.utils import IntegrityError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
 
 from .models import Role
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
-from django.contrib.auth import get_user_model
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    UserSerializer,
+    RoleSerializer
+)
 
 User = get_user_model()
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class AuthViewSet(viewsets.GenericViewSet):
-    """
-    A ViewSet for user authentication: register, login, logout.
-    """
     queryset = User.objects.all()
 
+    def get_serializer_class(self):
+        if self.action == 'register':
+            return RegisterSerializer
+        elif self.action == 'login':
+            return LoginSerializer
+        elif self.action == 'logout':
+            return LoginSerializer
+        elif self.action == 'whoami':
+            return UserSerializer
+        return UserSerializer
+
     def get_permissions(self):
-        # register & login can be accessed by anyone
         if self.action in ['register', 'login']:
             self.permission_classes = [AllowAny]
         else:
-            # logout or any other actions require the user to be authenticated
             self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
 
     @action(methods=['post'], detail=False)
     def register(self, request):
-        serializer = RegisterSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()  # create the user
-            return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                user = serializer.save()
+            except IntegrityError:
+                return Response(
+                    {"errors": "Username or email already taken."},
+                    status=status.HTTP_409_CONFLICT
+                )
+            user_data = UserSerializer(user).data
+            return Response(
+                {
+                    "success": True,
+                    "message": "User registered successfully.",
+                    "user": user_data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        # Validation failed
+        return Response(
+            {"success": False, "errors": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @action(methods=['post'], detail=False)
     def login(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)  # session-based login
-                return Response({"message": "Logged in successfully."}, status=status.HTTP_200_OK)
+                # Additional check: Is user active?
+                if not user.is_active:
+                    return Response(
+                        {"errors": "User account is disabled."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+                login(request, user)
+                user_data = UserSerializer(user).data
+                return Response(
+                    {
+                        "success": True,
+                        "message": "Logged in successfully.",
+                        "user": user_data
+                    },
+                    status=status.HTTP_200_OK
+                )
             else:
-                return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"success": False, "errors": "Invalid credentials."},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        # Serializer not valid
+        return Response(
+            {"success": False, "errors": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @action(methods=['post'], detail=False)
     def logout(self, request):
         logout(request)
-        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+        return Response({"success": True, "message": "Logged out successfully."}, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False)
+    def whoami(self, request):
+        if request.user.is_authenticated:
+            user_data = UserSerializer(request.user).data
+            return Response({"user": user_data}, status=status.HTTP_200_OK)
+        return Response({"detail": "Not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # Add permission classes, filtering, etc., as desired
 
 
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
-    # You can create a RoleSerializer or reuse something else
-    # serializer_class = RoleSerializer  (not shown in this snippet)
+    serializer_class = RoleSerializer
