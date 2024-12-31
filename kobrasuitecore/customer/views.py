@@ -37,7 +37,7 @@ class AuthViewSet(viewsets.GenericViewSet):
         return UserSerializer
 
     def get_permissions(self):
-        if self.action in ['register', 'login']:
+        if self.action in ['register', 'login', 'logout']:
             self.permission_classes = [AllowAny]
         else:
             self.permission_classes = [IsAuthenticated]
