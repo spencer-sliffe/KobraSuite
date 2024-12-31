@@ -1,5 +1,3 @@
-# api/router.py
-
 from rest_framework_nested import routers
 
 from customer.views import AuthViewSet, UserViewSet, RoleViewSet
