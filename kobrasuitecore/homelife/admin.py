@@ -3,7 +3,7 @@
 from django.contrib import admin
 from .models import (
     Household, Chore, SharedCalendarEvent, MealPlan,
-    GroceryItem, IoTDevice, IoTDataLog
+    GroceryItem
 )
 
 @admin.register(Household)
@@ -36,14 +36,3 @@ class GroceryItemAdmin(admin.ModelAdmin):
     search_fields = ('name', 'household__name')
     list_filter = ('purchased',)
 
-@admin.register(IoTDevice)
-class IoTDeviceAdmin(admin.ModelAdmin):
-    list_display = ('device_name', 'household', 'device_type', 'identifier', 'last_online')
-    search_fields = ('device_name', 'household__name', 'identifier')
-    list_filter = ('device_type', 'last_online')
-
-@admin.register(IoTDataLog)
-class IoTDataLogAdmin(admin.ModelAdmin):
-    list_display = ('iot_device', 'timestamp')
-    search_fields = ('iot_device__device_name',)
-    list_filter = ('timestamp',)

@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from homelife.types import ChoreFrequency, MealType
+
 
 class Household(models.Model):
     """

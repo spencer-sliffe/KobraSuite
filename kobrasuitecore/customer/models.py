@@ -3,6 +3,9 @@ from django.contrib.auth.models import AbstractUser, Permission
 from django.core.validators import RegexValidator
 from django.conf import settings
 
+from .types import MFAType
+
+
 class User(AbstractUser):
     """
     Custom user model extending Django's AbstractUser.

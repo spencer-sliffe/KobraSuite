@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from .types import WorkTaskStatus
+
+
 class Team(models.Model):
     """
     Group of users collaborating on work projects.

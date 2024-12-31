@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from .types import TransactionType, RecurringInterval, DebtType
+
+
 class BankAccount(models.Model):
     """
     Links a user to external or internal bank accounts.
@@ -101,7 +104,8 @@ class Bill(models.Model):
     name = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     due_date = models.DateField()
-    recurring_interval = models.CharField(max_length=50, choices=RecurringInterval.choices, default=NONE)
+    recurring_interval = models.CharField(max_length=50, choices=RecurringInterval.choices,
+                                          default=RecurringInterval.NONE)
     is_auto_pay_enabled = models.BooleanField(default=False)
 
     def __str__(self):

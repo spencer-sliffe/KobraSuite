@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from .types import AssetType, TradeTransactionType
+
+
 class Portfolio(models.Model):
     """
     A user’s investment portfolio.

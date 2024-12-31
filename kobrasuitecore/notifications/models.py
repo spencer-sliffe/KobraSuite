@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from .types import NotificationType
+
+
 class Notification(models.Model):
     """
     Cross-module user notifications (finance alert, chore reminder, etc.).
