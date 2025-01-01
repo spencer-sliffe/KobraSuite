@@ -1,16 +1,45 @@
-# kobrasuite_app
+# Kobra Suite Flutter Frontend
 
-A new Flutter project.
+## Install and Run
 
-## Getting Started
+1. **Install Flutter**: Download and install Flutter from [here](https://docs.flutter.dev/release/archive).
+      
+2. **Clone the Repo**: Download and install Repository from [here](https://github.com/spencer-sliffe/KobraSuite).
+    - **macOS/Linux**:
+      ```bash
+      git clone https://github.com/spencer-sliffe/KobraSuite.git
+      cd KobraSuite/kobrasuite_app
+      ```
+    - **Windows**:
+      ```bash
+      git clone https://github.com/spencer-sliffe/KobraSuite.git
+      cd KobraSuite\kobrasuite_app
+      ```
 
-This project is a starting point for a Flutter application.
+3. **Install Dependencies**:
+    - **macOS/Linux**:
+      ```bash
+      flutter pub get
+      ```
+    - **Windows**:
+      ```bash
+      flutter pub get
+      ```
 
-A few resources to get you started if this is your first Flutter project:
+4. **Setup Xcode (Optional)**:
+    - **macOS/Linux**:
+      - Install Xcode
+      ```bash
+      sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      sudo xcodebuild -license accept
+      ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+5. **Run the Project**:
+    - **macOS/Linux**:
+      ```bash
+      Flutter run
+      ```
+    - **Windows**:
+      ```bash
+      Flutter run
+      ```
