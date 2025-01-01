@@ -1,30 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: const KobraSuiteApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class KobraSuiteApp extends StatelessWidget {
+  const KobraSuiteApp({Key? key}) : super(key: key);
 
-  // Root of your application
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return MaterialApp(
       title: 'KobraSuite',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeNotifier.themeMode,
       initialRoute: '/login',
       routes: {
-        // Remove const here, because LoginScreen is not a const constructor
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(),
       },
     );
+  }
+}
+
+/// Simple [ChangeNotifier] for toggling theme mode between light/dark.
+class ThemeNotifier extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  ThemeMode get themeMode => _themeMode;
+
+  bool get isDarkMode => _themeMode == ThemeMode.dark;
+
+  void toggleTheme() {
+    if (_themeMode == ThemeMode.dark) {
+      _themeMode = ThemeMode.light;
+    } else {
+      _themeMode = ThemeMode.dark;
+    }
+    notifyListeners();
   }
 }

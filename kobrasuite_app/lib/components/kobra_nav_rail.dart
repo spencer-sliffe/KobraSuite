@@ -26,10 +26,6 @@ class KobraNavRail extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onItemTap,
       labelType: NavigationRailLabelType.all,
-      leading: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: FlutterLogo(size: 40),
-      ),
       destinations: navItems.map((item) {
         return NavigationRailDestination(
           icon: Icon(item['icon'] as IconData),
@@ -37,7 +33,11 @@ class KobraNavRail extends StatelessWidget {
             item['icon'] as IconData,
             color: Theme.of(context).colorScheme.primary,
           ),
-          label: Text(item['label'] as String),
+          // Make the text smaller by specifying a custom style:
+          label: Text(
+            item['label'] as String,
+            style: const TextStyle(fontSize: 8.5), // Adjust as needed
+          ),
         );
       }).toList(),
     );

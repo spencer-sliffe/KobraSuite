@@ -55,6 +55,18 @@ class KobraDrawer extends StatelessWidget {
                 },
               ),
             ),
+            // Add the "Settings" item pinned at the bottom
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Indicate settings by using an invalid index, e.g. -1
+                onItemTap(-1);
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(height: 16),
           ],
         ),
       ),

@@ -19,10 +19,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
-  String? _errorText; // Will display if there's any error from backend or validation
+  String?
+      _errorText; // Will display if there's any error from backend or validation
 
   Future<void> _register() async {
-    // Basic local validation example (e.g., required fields)
     if (_usernameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
@@ -48,14 +48,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (result['success'] == true) {
-        // Registration successful - immediately go to Login screen
+        // Registration successful - go to Login screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => LoginScreen()),
         );
       } else {
-        // Registration failed
-        // Could be validation errors or unique constraint errors
         setState(() {
           _errorText = result['errors']?.toString() ??
               result['detail']?.toString() ??
@@ -86,64 +84,135 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _usernameController,
-                  decoration:
-                  const InputDecoration(labelText: 'Username'),
+      // full-screen gradient as well
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1B1F32), Color(0xFF2A2D3E)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          child: Column(
+            children: [
+              const FlutterLogo(size: 80),
+              const SizedBox(height: 16),
+              Text(
+                'Create Account',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 30),
+              Card(
+                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
-                TextFormField(
-                  controller: _phoneNumberController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  decoration:
-                  const InputDecoration(labelText: 'Confirm Password'),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
-                if (_errorText != null)
-                  Text(
-                    _errorText!,
-                    style: const TextStyle(color: Colors.red),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  child: Form(
+                    key: _formKey,
+                    child: SizedBox(
+                      width: 400,
+                      height: 465,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Sign Up',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _usernameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              prefixIcon: Icon(Icons.person),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _phoneNumberController,
+                            decoration: const InputDecoration(
+                              labelText: 'Phone',
+                              prefixIcon: Icon(Icons.phone),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock),
+                            ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Confirm Password',
+                              prefixIcon: Icon(Icons.lock_reset),
+                            ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+                          if (_errorText != null)
+                            Text(
+                              _errorText!,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: _isLoading ? null : _register,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: _isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white)
+                                : const Text('Register'),
+                          ),
+                          const SizedBox(height: 12),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => LoginScreen()),
+                              );
+                            },
+                            child: const Text(
+                              'Go to Login',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _register,
-                  child: const Text('Register'),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => LoginScreen()),
-                    );
-                  },
-                  child: const Text('Go to Login'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
