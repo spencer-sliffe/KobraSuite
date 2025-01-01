@@ -42,7 +42,7 @@
      - Use the following template and replace placeholders as needed:
        ```plaintext
        SECRET_KEY=your_secret_key
-       DEBUG=False
+       DEBUG=True
        ALLOWED_HOSTS=localhost 127.0.0.1
        CSRF_TRUSTED_ORIGINS=https://127.0.0.1 
        SECURE_SSL_REDIRECT=0
@@ -54,7 +54,19 @@
    - **Windows**: 
      - Same steps as macOS/Linux.
 
-5. **Run Django Project**:
+5. **Migrate**:
+   - **macOS/Linux**: 
+     ```bash
+     python3 manage.py makemigrations
+     python3 manage.py migrate
+     ```
+   - **Windows**:
+     ```bash
+     python manage.py makemigrations
+     python manage.py migrate
+     ```
+
+6. **Run Django Project**:
    - **macOS/Linux**: 
      ```bash
      python3 manage.py runserver
@@ -62,4 +74,18 @@
    - **Windows**:
      ```bash
      python manage.py runserver
+     ```
+
+7. **Swagger UI**:
+   - **macOS/Linux**: 
+     ```bash
+     python3 manage.py collectstatic
+     python3 manage.py runserver
+     http://localhost:8000/swagger
+     ```
+   - **Windows**:
+     ```bash
+     python manage.py collectstatic
+     python manage.py runserver
+     http://localhost:8000/swagger
      ```
