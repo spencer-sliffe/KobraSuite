@@ -26,17 +26,15 @@ jobs:
           cd ./kobrasuite_app
           flutter pub get
 
+      - name: Install Node.js dependencies
+        run: |
+          cd ./kobrasuite_app
+          npm install --production
+
       - name: Build for web
         run: |
           cd ./kobrasuite_app
           flutter build web
-
-      - name: Prepare for deployment
-        run: |
-          cd ./kobrasuite_app
-          mkdir wwwroot
-          cp -r build/web/* wwwroot/
-          cp server.js wwwroot/
 
       - name: Zip artifact for deployment
         run: zip release.zip ./kobrasuite_app -r -x "venv/*"
