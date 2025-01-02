@@ -69,20 +69,21 @@ jobs:
       - name: Set up Python 3.x
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'  # or whichever version you prefer
+          python-version: '3.9'  
 
       - name: Create and activate virtual environment
         run: |
+          cd kobrasuitecore
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          pip install -r ./kobrasuitecore/requirements.txt
+          pip install -r requirements.txt
 
       - name: Run Django migrations
         # We use "env:" to pass your DB and Django settings into the process
         run: |
-          source venv/bin/activate
           cd kobrasuitecore
+          source venv/bin/activate
           python manage.py makemigrations
           python manage.py migrate
           # Optionally collect static files, if needed:
