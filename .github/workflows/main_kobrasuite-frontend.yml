@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - kobrasuite-frontend
 
 on:
@@ -60,13 +57,48 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip ./release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_81541AC136FA4B749D2C0017BE1F60CD }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_649382B575D04D37A4DC4EB0A15A2793 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6E763AD720E4446EB25B89D3BFD7FDE5 }}
+
+      # --- BEGIN DJANGO MIGRATION STEPS ---
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # or whichever version you prefer
+
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r ./kobrasuitecore/requirements.txt
+
+      - name: Run Django migrations
+        # We use "env:" to pass your DB and Django settings into the process
+        run: |
+          source venv/bin/activate
+          cd kobrasuitecore
+          python manage.py makemigrations
+          python manage.py migrate
+          # Optionally collect static files, if needed:
+          # python manage.py collectstatic --noinput
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          CSRF_TRUSTED_ORIGINS: ${{ secrets.CSRF_TRUSTED_ORIGINS }}
+          SECURE_SSL_REDIRECT: ${{ secrets.SECURE_SSL_REDIRECT }}
+          DBNAME: ${{ secrets.DBNAME }}
+          DBHOST: ${{ secrets.DBHOST }}
+          DBUSER: ${{ secrets.DBUSER }}
+          DBPASS: ${{ secrets.DBPASS }}
+          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+      # --- END DJANGO MIGRATION STEPS ---
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
