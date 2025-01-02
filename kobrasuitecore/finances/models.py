@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from .types import TransactionType, RecurringInterval, DebtType
+from django.utils import timezone
 
 
 class BankAccount(models.Model):
@@ -19,7 +20,7 @@ class BankAccount(models.Model):
     currency = models.CharField(max_length=10, default='USD')
     last_synced = models.DateTimeField(null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -44,7 +45,7 @@ class Budget(models.Model):
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -101,7 +102,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     description = models.TextField(null=True, blank=True)
     date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.transaction_type} - {self.amount} - {self.user.username}"
@@ -129,7 +130,7 @@ class Bill(models.Model):
     )
     is_auto_pay_enabled = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)  
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -158,7 +159,7 @@ class Debt(models.Model):
         choices=DebtType.choices,
         default=DebtType.OTHER
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.name} - {self.user.username}"
@@ -180,7 +181,7 @@ class SavingsGoal(models.Model):
     target_amount = models.DecimalField(max_digits=12, decimal_places=2)
     current_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     deadline = models.DateField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.name} - {self.user.username}"

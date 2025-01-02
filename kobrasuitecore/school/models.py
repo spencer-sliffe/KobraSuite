@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Course(models.Model):
     """
@@ -15,7 +16,7 @@ class Course(models.Model):
         blank=True
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
@@ -36,7 +37,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     due_date = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.title} ({self.course.title})"
@@ -122,7 +123,7 @@ class StudyNote(models.Model):
         related_name='notes'
     )
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     shared_with = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,

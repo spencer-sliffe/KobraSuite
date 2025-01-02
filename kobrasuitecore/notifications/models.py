@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from .types import NotificationType
+from django.utils import timezone
 
 
 class Notification(models.Model):
@@ -14,7 +15,7 @@ class Notification(models.Model):
     )
     title = models.CharField(max_length=200)
     message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     read = models.BooleanField(default=False)
     notification_type = models.CharField(
         max_length=50,

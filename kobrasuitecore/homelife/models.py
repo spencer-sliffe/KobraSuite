@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from homelife.types import ChoreFrequency, MealType
+from django.utils import timezone
 
 
 class Household(models.Model):
@@ -8,7 +9,7 @@ class Household(models.Model):
     Represents a household (family unit) with multiple members.
     """
     name = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     members = models.ManyToManyField(
@@ -49,7 +50,7 @@ class Chore(models.Model):
         blank=True
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -74,7 +75,7 @@ class SharedCalendarEvent(models.Model):
     description = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.title} ({self.household.name})"
@@ -100,7 +101,7 @@ class MealPlan(models.Model):
     recipe_name = models.CharField(max_length=100)
     notes = models.TextField(null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.recipe_name} on {self.date} ({self.household.name})"
@@ -122,7 +123,7 @@ class GroceryItem(models.Model):
     quantity = models.CharField(max_length=50, null=True, blank=True)
     purchased = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.name} ({self.household.name})"

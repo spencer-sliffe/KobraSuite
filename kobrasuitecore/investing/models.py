@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from .types import AssetType, TradeTransactionType
+from django.utils import timezone
 
 
 class Portfolio(models.Model):
@@ -13,7 +14,7 @@ class Portfolio(models.Model):
         related_name='portfolios'
     )
     name = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -59,7 +60,7 @@ class Holding(models.Model):
     )
     quantity = models.DecimalField(max_digits=12, decimal_places=4, default=0.0000)
     average_cost = models.DecimalField(max_digits=12, decimal_places=4, default=0.0000)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -87,7 +88,7 @@ class TradeTransaction(models.Model):
     transaction_date = models.DateTimeField()
     fees = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.transaction_type} {self.quantity} of {self.holding.asset.symbol}"
@@ -106,7 +107,7 @@ class Watchlist(models.Model):
         related_name='watchlists'
     )
     name = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     assets = models.ManyToManyField(
         Asset,
         related_name='watchlisted_by',

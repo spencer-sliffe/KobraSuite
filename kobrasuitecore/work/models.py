@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 from .types import WorkTaskStatus
 
@@ -10,7 +11,7 @@ class Team(models.Model):
     """
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, 
         related_name='teams', 
@@ -67,7 +68,7 @@ class WorkTask(models.Model):
     )
     priority = models.IntegerField(default=1)
     due_date = models.DateField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.title} ({self.project.name})"
@@ -124,7 +125,7 @@ class Meeting(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     location = models.CharField(max_length=200, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     attendees = models.ManyToManyField(
         settings.AUTH_USER_MODEL, 
         related_name='meetings', 
@@ -145,7 +146,7 @@ class MeetingNote(models.Model):
         related_name='notes'
     )
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

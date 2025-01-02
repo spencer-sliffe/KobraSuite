@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Permission
 from django.core.validators import RegexValidator
 from django.conf import settings
+from django.utils import timezone
 
 from .types import MFAType
 
@@ -84,7 +85,7 @@ class SecureDocument(models.Model):
     title = models.CharField(max_length=100)
     file = models.FileField(upload_to='secure_documents/')
     description = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.title} - {self.user.username}"
