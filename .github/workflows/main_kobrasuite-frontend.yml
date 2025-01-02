@@ -71,19 +71,13 @@ jobs:
         with:
           python-version: '3.9'  
 
-      - name: Create and activate virtual environment
+      - name: Virtual environment and Migrations
         run: |
           cd kobrasuitecore
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Run Django migrations
-        # We use "env:" to pass your DB and Django settings into the process
-        run: |
-          cd kobrasuitecore
-          source venv/bin/activate
           python manage.py makemigrations
           python manage.py migrate
           # Optionally collect static files, if needed:
@@ -99,6 +93,7 @@ jobs:
           DBUSER: ${{ secrets.DBUSER }}
           DBPASS: ${{ secrets.DBPASS }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          
       # --- END DJANGO MIGRATION STEPS ---
 
       - name: 'Deploy to Azure Web App'
