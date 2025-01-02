@@ -3,10 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   // Replace with your actual backend base URL
-  static const String baseUrl = String.fromEnvironment(
-    'BASE_URL',
-    defaultValue: 'http://127.0.0.1:8000',
-  );
+  static const String baseUrl = 'https://kobrasuite-backend.azurewebsites.net';
 
   // A place to store the session cookie in memory
   static String? sessionCookie;
