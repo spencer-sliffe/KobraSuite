@@ -20,10 +20,12 @@
     - **macOS/Linux**:
       ```bash
       flutter pub get
+      npm install
       ```
     - **Windows**:
       ```bash
       flutter pub get
+      npm install
       ```
 
 4. **Setup Xcode (Optional)**:
