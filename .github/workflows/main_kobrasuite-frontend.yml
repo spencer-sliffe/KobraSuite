@@ -30,7 +30,7 @@ jobs:
       - name: Build for web
         run: |
           cd ./kobrasuite_app
-          flutter build web
+          flutter build web --dart-define=BASE_URL=${{ secrets.BASE_URL }}
 
       - name: Zip artifact for deployment
         run: |
