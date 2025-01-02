@@ -73,7 +73,7 @@ jobs:
 
       - name: Virtual environment and Migrations
         run: |
-          cd kobrasuitecore
+          cd ./kobrasuitecore
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
