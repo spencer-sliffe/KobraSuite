@@ -72,8 +72,8 @@ jobs:
           python-version: '3.9'  
 
       - name: Virtual environment and Migrations
+        working-directory: ./kobrasuitecore
         run: |
-          cd ./kobrasuitecore
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
