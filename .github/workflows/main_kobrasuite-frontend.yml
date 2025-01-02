@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -34,13 +33,18 @@ jobs:
           flutter build web
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./kobrasuite_app -r -x "venv/*"
+        run: |
+          zip -r release.zip kobrasuite_app kobrasuitecore \
+            -x ".github/*" \
+            -x ".git/*" \
+            -x "venv/*" \
+            -x ".DS_Store"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: ./release.zip
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,7 +69,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_649382B575D04D37A4DC4EB0A15A2793 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6E763AD720E4446EB25B89D3BFD7FDE5 }}
 
-      # --- BEGIN DJANGO MIGRATION STEPS ---
+      # --- Django migration steps, now that kobrasuitecore exists ---
       - name: Set up Python 3.x
         uses: actions/setup-python@v4
         with:
@@ -80,7 +84,7 @@ jobs:
           pip install -r requirements.txt
           python manage.py makemigrations
           python manage.py migrate
-          # Optionally collect static files, if needed:
+          # If you need static collection:
           # python manage.py collectstatic --noinput
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -93,10 +97,8 @@ jobs:
           DBUSER: ${{ secrets.DBUSER }}
           DBPASS: ${{ secrets.DBPASS }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
-          
-      # --- END DJANGO MIGRATION STEPS ---
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
